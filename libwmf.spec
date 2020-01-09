@@ -1,7 +1,7 @@
 Summary: Windows MetaFile Library
 Name: libwmf
 Version: 0.2.8.4
-Release: 22%{?dist}
+Release: 23%{?dist}
 Group: System Environment/Libraries
 #libwmf is under the LGPLv2+, however...
 #1. The tarball contains an old version of the urw-fonts under GPL+.
@@ -20,10 +20,11 @@ Patch4: libwmf-0.2.8.4-multiarchdevel.patch
 Patch5: libwmf-0.2.8.4-intoverflow.patch
 Patch6: libwmf-0.2.8.4-reducesymbols.patch
 Patch7: libwmf-0.2.8.4-useafterfree.patch
+Patch8: libwmf-0.2.8.4-pixbufloaderdir.patch
 Requires: urw-fonts
 Requires: %{name}-lite = %{version}-%{release}
-Requires(post): %{_bindir}/update-gdk-pixbuf-loaders
-Requires(postun): %{_bindir}/update-gdk-pixbuf-loaders
+Requires(post): gdk-pixbuf2
+Requires(postun): gdk-pixbuf2
 BuildRequires: gtk2-devel, libtool, libxml2-devel, gd-devel, libpng-devel
 BuildRequires: libjpeg-devel, libXt-devel, libX11-devel, dos2unix, libtool
 
@@ -57,6 +58,7 @@ using libwmf.
 %patch5 -p1 -b .intoverflow
 %patch6 -p1 -b .reducesymbols.patch
 %patch7 -p1 -b .useafterfree.patch
+%patch8 -p1 -b .pixbufloaderdir.patch
 f=README ; iconv -f iso-8859-2 -t utf-8 $f > $f.utf8 ; mv $f.utf8 $f
 
 %build
@@ -74,8 +76,8 @@ export tagname=CC
 make DESTDIR=$RPM_BUILD_ROOT LIBTOOL=/usr/bin/libtool install
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
-rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/*/loaders/*.a
-rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/*/loaders/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/gdk-pixbuf-2.0/*/loaders/*.a
+rm -f $RPM_BUILD_ROOT%{_libdir}/gdk-pixbuf-2.0/*/loaders/*.la
 rm -rf $RPM_BUILD_ROOT%{_includedir}/libwmf/gd
 find doc -name "Makefile*" -exec rm {} \;
 #we're carrying around duplicate fonts
@@ -85,13 +87,13 @@ sed -i $RPM_BUILD_ROOT%{_datadir}/libwmf/fonts/fontmap -e 's#libwmf/fonts#fonts/
 
 %post
 /sbin/ldconfig
-%{_bindir}/update-gdk-pixbuf-loaders %{_host} &>/dev/null || :
+gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 
 %post lite -p /sbin/ldconfig
 
 %postun 
 /sbin/ldconfig
-%{_bindir}/update-gdk-pixbuf-loaders %{_host} &>/dev/null || :
+gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 
 %postun lite -p /sbin/ldconfig
 
@@ -99,7 +101,7 @@ sed -i $RPM_BUILD_ROOT%{_datadir}/libwmf/fonts/fontmap -e 's#libwmf/fonts#fonts/
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING README
 %{_libdir}/libwmf-*.so.*
-%{_libdir}/gtk-2.0/*/loaders/*.so
+%{_libdir}/gdk-pixbuf-2.0/*/loaders/*.so
 %{_bindir}/wmf2svg
 %{_bindir}/wmf2gd
 %{_bindir}/wmf2eps
@@ -128,6 +130,9 @@ sed -i $RPM_BUILD_ROOT%{_datadir}/libwmf/fonts/fontmap -e 's#libwmf/fonts#fonts/
 rm -r $RPM_BUILD_ROOT
 
 %changelog
+* Fri Jun 13 2014 Caolán McNamara <caolanm@redhat.com> - 0.2.8.4-23
+- Resolves: rhbz#1104684 Adapt to standalone gdk-pixbuf
+
 * Fri Apr 16 2010 Caolán McNamara <caolanm@redhat.com> - 0.2.8.4-22
 - Resolves: rhbz#583029 clarify licences
 
