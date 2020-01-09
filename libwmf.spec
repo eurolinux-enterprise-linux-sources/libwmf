@@ -1,7 +1,7 @@
 Summary: Windows MetaFile Library
 Name: libwmf
 Version: 0.2.8.4
-Release: 23%{?dist}
+Release: 25%{?dist}
 Group: System Environment/Libraries
 #libwmf is under the LGPLv2+, however...
 #1. The tarball contains an old version of the urw-fonts under GPL+.
@@ -21,6 +21,12 @@ Patch5: libwmf-0.2.8.4-intoverflow.patch
 Patch6: libwmf-0.2.8.4-reducesymbols.patch
 Patch7: libwmf-0.2.8.4-useafterfree.patch
 Patch8: libwmf-0.2.8.4-pixbufloaderdir.patch
+# CVE-2015-0848+CVE-2015-4588
+Patch9: libwmf-0.2.8.4-CVE-2015-0848+CVE-2015-4588.patch
+# CVE-2015-4695
+Patch10: libwmf-0.2.8.4-CVE-2015-4695.patch
+# CVE-2015-4696
+Patch11: libwmf-0.2.8.4-CVE-2015-4696.patch
 Requires: urw-fonts
 Requires: %{name}-lite = %{version}-%{release}
 Requires(post): gdk-pixbuf2
@@ -59,6 +65,10 @@ using libwmf.
 %patch6 -p1 -b .reducesymbols.patch
 %patch7 -p1 -b .useafterfree.patch
 %patch8 -p1 -b .pixbufloaderdir.patch
+%patch9 -p1 -b .CVE-2015-0848+CVE-2015-4588.patch
+%patch10 -p1 -b .CVE-2015-4695.patch
+%patch11 -p1 -b .CVE-2015-4696.patch
+
 f=README ; iconv -f iso-8859-2 -t utf-8 $f > $f.utf8 ; mv $f.utf8 $f
 
 %build
@@ -130,6 +140,12 @@ gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 rm -r $RPM_BUILD_ROOT
 
 %changelog
+* Wed Sep 02 2015 Caolán McNamara <caolanm@redhat.com> - 0.2.8.4-25
+- Resolves: rhbz#1227428 - CVE-2015-0848 CVE-2015-4588 CVE-2015-4695 CVE-2015-4696
+
+* Mon Jun 08 2015 Caolán McNamara <caolanm@redhat.com> - 0.2.8.4-24
+- Resolves: rhbz#1227429 CVE-2015-0848 libwmf: heap overflow when decoding BMP images
+
 * Fri Jun 13 2014 Caolán McNamara <caolanm@redhat.com> - 0.2.8.4-23
 - Resolves: rhbz#1104684 Adapt to standalone gdk-pixbuf
 
