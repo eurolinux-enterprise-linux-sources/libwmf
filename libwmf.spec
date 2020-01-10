@@ -1,7 +1,7 @@
 Summary: Windows MetaFile Library
 Name: libwmf
 Version: 0.2.8.4
-Release: 37%{?dist}
+Release: 39%{?dist}
 Group: System Environment/Libraries
 #libwmf is under the LGPLv2+, however...
 #1. The tarball contains an old version of the urw-fonts under GPL+.
@@ -167,6 +167,12 @@ gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 
 
 %changelog
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 0.2.8.4-39
+- Mass rebuild 2014-01-24
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 0.2.8.4-38
+- Mass rebuild 2013-12-27
+
 * Thu Apr 04 2013 Caolán McNamara <caolanm@redhat.com> - 0.2.8.4-37
 - Resolves: rhbz#925929 support aarch64
 
