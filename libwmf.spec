@@ -1,7 +1,7 @@
 Summary: Windows MetaFile Library
 Name: libwmf
 Version: 0.2.8.4
-Release: 39%{?dist}
+Release: 41%{?dist}
 Group: System Environment/Libraries
 #libwmf is under the LGPLv2+, however...
 #1. The tarball contains an old version of the urw-fonts under GPL+.
@@ -55,6 +55,12 @@ Patch14: libwmf-0.2.8.4-CAN-2004-0941.patch
 Patch15: libwmf-0.2.8.4-CVE-2009-3546.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=925929
 Patch16: libwmf-aarch64.patch
+# CVE-2015-0848+CVE-2015-4588
+Patch17: libwmf-0.2.8.4-CVE-2015-0848+CVE-2015-4588.patch
+# CVE-2015-4695
+Patch18: libwmf-0.2.8.4-CVE-2015-4695.patch
+# CVE-2015-4696
+Patch19: libwmf-0.2.8.4-CVE-2015-4696.patch
 
 Requires: urw-fonts
 Requires: %{name}-lite = %{version}-%{release}
@@ -102,6 +108,9 @@ using libwmf.
 %patch14 -p1 -b .CAN-2004-0941
 %patch15 -p1 -b .CVE-2009-3546
 %patch16 -p1 -b .aarch64
+%patch17 -p1 -b .CVE-2015-0848+CVE-2015-4588
+%patch18 -p1 -b .CVE-2015-4695
+%patch19 -p1 -b .CVE-2015-4696
 f=README ; iconv -f iso-8859-2 -t utf-8 $f > $f.utf8 ; mv $f.utf8 $f
 
 %build
@@ -167,6 +176,20 @@ gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 
 
 %changelog
+* Tue Oct 20 2015 Scientific Linux Auto Patch Process <SCIENTIFIC-LINUX-DEVEL@LISTSERV.FNAL.GOV>
+- Eliminated rpmbuild "bogus date" error due to inconsistent weekday,
+  by assuming the date is correct and changing the weekday.
+  Tue Jan 19 2006 --> Tue Jan 17 2006 or Thu Jan 19 2006 or Tue Jan 24 2006 or ....
+
+* Wed Sep 02 2015 Caolán McNamara <caolanm@redhat.com> - 0.2.8.4-41
+- Related: rhbz#1239161 fix patch context
+
+* Mon Jun 08 2015 Caolán McNamara <caolanm@redhat.com> - 0.2.8.4-40
+- Resolves: rhbz#1239161 CVE-2015-0848 CVE-2015-4588 CVE-2015-4695 CVE-2015-4696
+
+* Mon Jun 08 2015 Caolán McNamara <caolanm@redhat.com> - 0.2.8.4-39.1
+- Resolves: rhbz#1227430 CVE-2015-0848 heap overflow when decoding BMP images
+
 * Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 0.2.8.4-39
 - Mass rebuild 2014-01-24
 
@@ -283,7 +306,8 @@ gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 * Tue Feb 07 2006 Jesse Keating <jkeating@redhat.com> - 0.2.8.4-4.1
 - rebuilt for new gcc4.1 snapshot and glibc changes
 
-* Tue Jan 19 2006 Caolan McNamara <caolanm@redhat.com> 0.2.8.4-4
+* Thu Jan 19 2006 Caolan McNamara <caolanm@redhat.com> 0.2.8.4-4
+  Tue Jan 19 2006 --> Tue Jan 17 2006 or Thu Jan 19 2006 or Tue Jan 24 2006 or ....
 - rh#178275# match srvg gtk2 _host usage for pixbuf loaders
 
 * Tue Jan 03 2006 Caolan McNamara <caolanm@redhat.com> 0.2.8.4-3
